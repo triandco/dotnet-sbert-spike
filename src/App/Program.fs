@@ -1,5 +1,4 @@
 ﻿// For more information see https://aka.ms/fsharp-console-apps
-open Library
+open SentenceEmbedding
 
 printfn "Test model"
-Test.run "model.onnx"

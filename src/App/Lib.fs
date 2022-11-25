@@ -1,33 +1,27 @@
-namespace Library
+module SentenceEmbedding
 
 open System.Linq
-open Microsoft.ML
-open Microsoft.ML.Data
-open Microsoft.ML.Transforms.Onnx
 open Microsoft.ML.OnnxRuntime
 open Microsoft.ML.OnnxRuntime.Tensors
 
+  
+type Input = {
+  InputIds: DenseTensor<int64>
+  AttentionMask: DenseTensor<int64>  
+}
 
-module Test = 
-
-  // run model with a sample input
-  let run (file_path: string) =
-
-    let inputIds  = DenseTensor<int64> [| 01; 7592; 2088;  102 |]
-    let attentionMask  = DenseTensor<int64> [| 01; 7592; 2088;  102 |]
-
-    let input = [|
-      NamedOnnxValue.CreateFromTensor("input_ids", inputIds)
-      NamedOnnxValue.CreateFromTensor("attention_mask", attentionMask)
+let encodeWithModel (modelPath: string) (input: Input) : Tensor<float32>=
+  
+  use session = new InferenceSession(modelPath)
+  let output = 
+    [|
+      NamedOnnxValue.CreateFromTensor("input_ids", input.InputIds)
+      NamedOnnxValue.CreateFromTensor("attention_mask", input.AttentionMask)
     |]
+    |> session.Run 
 
-    use session = new InferenceSession(
-      file_path, 
-      new SessionOptions(
-        EnableMemoryPattern=true, 
-        EnableCpuMemArena=true, 
-        LogSeverityLevel=OrtLoggingLevel.ORT_LOGGING_LEVEL_VERBOSE))
-    
-    let result = session.Run input 
+  output.Single().AsTensor<float32>()
 
-    printf "%A" result
+let tokenize (_: string seq) : Input =
+  raise <| System.NotImplementedException ()
+  

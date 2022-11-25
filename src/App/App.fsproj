@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="Lib.fs" />
+    <Compile Include="WordPieceTokenizer.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
