@@ -1,5 +1,6 @@
 module WordPieceTokeniserOptions
 
+// Vocab specific for [msmarco-distilbert-base-tas-b](https://huggingface.co/sentence-transformers/msmarco-distilbert-base-tas-b/tree/main)
 [<Literal>]
 let DEFAULT_VOCAB = 
   """[PAD]
